@@ -85,8 +85,8 @@ CORAL=0
 INSTALLBRANCH=master
 if [ -d "$INSTALLERDIR/.git" ] ; then
     pushd "$INSTALLERDIR"
-    CURRENTBRANCH=$(git rev-parse --abbrev-ref HEAD)
     if [ "$CURRENTBRANCH" = "master" ] ; then
+    CURRENTBRANCH=$(git rev-parse --abbrev-ref HEAD)
         INSTALLBRANCH=master
     else
         INSTALLBRANCH=development
@@ -195,6 +195,21 @@ case "$vendor" in
             *) echo "Unsupported Debian version: $targetVersion" >&2 ; exit 1 ;;
         esac
         ;;
+
+    Kali)
+        # remove Debian .N version number
+        targetSystem=kali
+        targetVersion=${version%.*}
+        # rewrite testing to 10
+        if [ $targetVersion != "testing" ] ; then
+            targetVersion=10
+        fi
+        case "$targetVersion" in
+            9|10|11) ;;
+            *) echo "Unsupported Kali version: $targetVersion" >&2 ; exit 1 ;;
+        esac
+        ;;    
+    
     Raspbian)
         # raspbian is Debian, so version numbers are the same - I hope
         targetSystem=raspi
